@@ -8,6 +8,14 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
         }
         #game {
             margin-top: 50px;
@@ -17,17 +25,47 @@
             font-size: 16px;
             margin-top: 10px;
         }
+        #landscape-warning {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 24px;
+            padding: 20px;
+        }
+        @media only screen and (orientation: portrait) {
+            .game-container {
+                display: none;
+            }
+            #landscape-warning {
+                display: flex;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Guess the Number Game</h1>
-    <div id="game">
-        <p>Guess the number between 1 and 100</p>
-        <input type="number" id="guess" placeholder="Enter a number" />
-        <button onclick="checkGuess()">Submit</button>
-        <p id="message"></p>
+    <div id="landscape-warning">
+        Please rotate your device to landscape mode to play the game.
+    </div>
+    <div class="game-container">
+        <h1>Guess the Number Game</h1>
+        <div id="game">
+            <p>Guess the number between 1 and 100</p>
+            <input type="number" id="guess" placeholder="Enter a number" />
+            <button onclick="checkGuess()">Submit</button>
+            <p id="message"></p>
+        </div>
     </div>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         let randomNumber = Math.floor(Math.random() * 100) + 1;
 
@@ -43,7 +81,39 @@
                 message.innerHTML = 'Too high! Try again.';
             }
         }
+
+        function handleOrientationChange() {
+            const warning = document.getElementById('landscape-warning');
+            const gameContainer = document.querySelector('.game-container');
+
+            if (window.innerHeight > window.innerWidth) {
+                warning.style.display = 'flex';
+                gameContainer.style.display = 'none';
+            } else {
+                warning.style.display = 'none';
+                gameContainer.style.display = 'flex';
+            }
+        }
+
+        window.addEventListener('orientationchange', handleOrientationChange);
+        window.addEventListener('resize', handleOrientationChange);
+
+        // Initial check
+        handleOrientationChange();
+
+        // Detect if the game is being played in a Telegram Web App
+        if (window.Telegram.WebApp.initDataUnsafe) {
+            // Only enforce landscape mode in the Telegram Web App
+            window.addEventListener('load', function() {
+                if (window.innerHeight > window.innerWidth) {
+                    document.getElementById('landscape-warning').style.display = 'flex';
+                    document.querySelector('.game-container').style.display = 'none';
+                } else {
+                    document.getElementById('landscape-warning').style.display = 'none';
+                    document.querySelector('.game-container').style.display = 'flex';
+                }
+            });
+        }
     </script>
 </body>
 </html>
-
