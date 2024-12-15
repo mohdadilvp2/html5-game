@@ -86,9 +86,11 @@
         // Ensure landscape mode and full screen for Telegram mini app
         function ensureLandscape() {
             const gameContainer = document.querySelector('.game-container');
-            gameContainer.classList.add('landscape');
-            // Request full screen
-            window.Telegram.WebApp.expand();
+            if (window.innerHeight > window.innerWidth) {
+                gameContainer.classList.add('landscape');
+            } else {
+                gameContainer.classList.remove('landscape');
+            }
         }
 
         window.addEventListener('resize', ensureLandscape);
