@@ -7,55 +7,47 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 100%;
+            height: 100%;
             background-color: #f0f0f0;
+            overflow: hidden;
         }
-        #game {
-            margin-top: 50px;
+        
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
         }
+
+        .landscape {
+            transform: rotate(90deg);
+            transform-origin: center center;
+            width: 100vh;
+            height: 100vw;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -50vh;
+            margin-left: -50vw;
+        }
+
         input {
             padding: 10px;
             font-size: 16px;
             margin-top: 10px;
         }
-        #landscape-warning {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            font-size: 24px;
-            padding: 20px;
-        }
-        @media only screen and (orientation: portrait) {
-            .game-container {
-                display: none;
-            }
-            #landscape-warning {
-                display: flex;
-            }
-        }
     </style>
 </head>
 <body>
-    <div id="landscape-warning">
-        Please rotate your device to landscape mode to play the game.
-    </div>
-    <div class="game-container">
+    <div class="game-container landscape">
         <h1>Guess the Number Game</h1>
         <div id="game">
             <p>Guess the number between 1 and 100</p>
@@ -82,38 +74,21 @@
             }
         }
 
-        function handleOrientationChange() {
-            const warning = document.getElementById('landscape-warning');
+        // Ensure landscape mode is applied
+        function ensureLandscape() {
             const gameContainer = document.querySelector('.game-container');
-
             if (window.innerHeight > window.innerWidth) {
-                warning.style.display = 'flex';
-                gameContainer.style.display = 'none';
+                gameContainer.classList.add('landscape');
             } else {
-                warning.style.display = 'none';
-                gameContainer.style.display = 'flex';
+                gameContainer.classList.remove('landscape');
             }
         }
 
-        window.addEventListener('orientationchange', handleOrientationChange);
-        window.addEventListener('resize', handleOrientationChange);
+        window.addEventListener('resize', ensureLandscape);
+        window.addEventListener('orientationchange', ensureLandscape);
 
         // Initial check
-        handleOrientationChange();
-
-        // Detect if the game is being played in a Telegram Web App
-        if (window.Telegram.WebApp.initDataUnsafe) {
-            // Only enforce landscape mode in the Telegram Web App
-            window.addEventListener('load', function() {
-                if (window.innerHeight > window.innerWidth) {
-                    document.getElementById('landscape-warning').style.display = 'flex';
-                    document.querySelector('.game-container').style.display = 'none';
-                } else {
-                    document.getElementById('landscape-warning').style.display = 'none';
-                    document.querySelector('.game-container').style.display = 'flex';
-                }
-            });
-        }
+        ensureLandscape();
     </script>
 </body>
 </html>
