@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Guessing Game</title>
+    <title>Simple Guessing Game with Payments</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,12 +12,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             background-color: #f0f0f0;
             overflow: hidden;
         }
-        
+
         .game-container {
             display: flex;
             flex-direction: column;
@@ -54,6 +54,7 @@
             <input type="number" id="guess" placeholder="Enter a number" />
             <button onclick="checkGuess()">Submit</button>
             <p id="message"></p>
+            <button onclick="makePayment()">Buy More Tries</button>
         </div>
     </div>
 
@@ -74,14 +75,20 @@
             }
         }
 
-        // Ensure landscape mode is applied
+        function makePayment() {
+            Telegram.WebApp.init();
+            Telegram.WebApp.sendData(JSON.stringify({
+                action: "buy",
+                product_id: "buy_tries"
+            }));
+        }
+
+        // Ensure landscape mode and full screen for Telegram mini app
         function ensureLandscape() {
             const gameContainer = document.querySelector('.game-container');
-            if (window.innerHeight > window.innerWidth) {
-                gameContainer.classList.add('landscape');
-            } else {
-                gameContainer.classList.remove('landscape');
-            }
+            gameContainer.classList.add('landscape');
+            // Request full screen
+            window.Telegram.WebApp.expand();
         }
 
         window.addEventListener('resize', ensureLandscape);
