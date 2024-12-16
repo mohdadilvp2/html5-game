@@ -27,6 +27,18 @@
             height: 100%;
         }
 
+        .landscape {
+            transform: rotate(90deg);
+            transform-origin: center center;
+            width: 100vh;
+            height: 100vw;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -50vh;
+            margin-left: -50vw;
+        }
+
         input {
             padding: 10px;
             font-size: 16px;
@@ -35,7 +47,7 @@
     </style>
 </head>
 <body>
-    <div class="game-container">
+    <div class="game-container landscape">
         <h1>Guess the Number Game</h1>
         <div id="game">
             <p>Guess the number between 1 and 100</p>
@@ -48,32 +60,6 @@
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        Telegram.WebApp.ready();
-
-        // Request fullscreen and lock orientation on load
-        Telegram.WebApp.expand();
-        if (Telegram.WebApp.isExpanded === false) {
-            Telegram.WebApp.expand();
-        }
-
-        // Ensure landscape mode and handle keyboard issues
-        Telegram.WebApp.onEvent('viewportChanged', ensureLandscape);
-
-        function ensureLandscape() {
-            const viewport = Telegram.WebApp.viewportHeight;
-            const gameContainer = document.querySelector('.game-container');
-            if (viewport.height > viewport.width) {
-                gameContainer.style.transform = 'rotate(90deg)';
-                gameContainer.style.transformOrigin = 'center';
-                gameContainer.style.width = `${viewport.height}px`;
-                gameContainer.style.height = `${viewport.width}px`;
-            } else {
-                gameContainer.style.transform = 'none';
-                gameContainer.style.width = `${viewport.width}px`;
-                gameContainer.style.height = `${viewport.height}px`;
-            }
-        }
-
         let randomNumber = Math.floor(Math.random() * 100) + 1;
 
         function checkGuess() {
@@ -108,7 +94,20 @@
             }
         }
 
-        // Initial check for landscape
+        // Ensure landscape mode and full screen for Telegram mini app
+        function ensureLandscape() {
+            const gameContainer = document.querySelector('.game-container');
+            if (window.innerHeight > window.innerWidth) {
+                gameContainer.classList.add('landscape');
+            } else {
+                gameContainer.classList.remove('landscape');
+            }
+        }
+
+        window.addEventListener('resize', ensureLandscape);
+        window.addEventListener('orientationchange', ensureLandscape);
+
+        // Initial check
         ensureLandscape();
     </script>
 </body>
