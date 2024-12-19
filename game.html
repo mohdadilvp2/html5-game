@@ -44,6 +44,16 @@
             font-size: 16px;
             margin-top: 10px;
         }
+
+        .success-message {
+            color: green;
+            font-weight: bold;
+        }
+
+        .error-message {
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -62,6 +72,8 @@
             data-radius="10"
             data-auth-url="https://1b7b-81-59-73-2.ngrok-free.app/auth/telegram/callback"
             data-request-access="write"></script>
+            <p id="success-message" class="success-message" style="display: none;">Purchase successful! You now have more tries.</p>
+            <p id="error-message" class="error-message" style="display: none;">There was an error with your purchase. Please try again.</p>
         </div>
     </div>
 
@@ -111,12 +123,24 @@
             }
         }
 
+        // Check for 'success' and 'error' parameters in URL
+        function checkParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('success')) {
+                const successMessage = document.getElementById('success-message');
+                successMessage.style.display = 'block';
+            } else if (urlParams.has('error')) {
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.style.display = 'block';
+            }
+        }
+
         window.addEventListener('resize', ensureLandscape);
         window.addEventListener('orientationchange', ensureLandscape);
 
-        // Initial check
+        // Initial checks
         ensureLandscape();
+        checkParams();
     </script>
-
 </body>
 </html>
