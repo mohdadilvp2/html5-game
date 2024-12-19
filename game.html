@@ -45,6 +45,25 @@
             margin-top: 10px;
         }
 
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .buy-more-tries {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .buy-more-tries:hover {
+            background-color: #0056b3;
+        }
+
         .success-message {
             color: green;
             font-weight: bold;
@@ -64,7 +83,7 @@
             <input type="number" id="guess" placeholder="Enter a number" />
             <button onclick="checkGuess()">Submit</button>
             <p id="message"></p>
-            <button onclick="buyMoreTries()">Buy More Tries</button>
+            <button class="buy-more-tries" onclick="buyMoreTries()">Buy More Tries</button>
             <div id="telegram-login"></div>
             <script async src="https://telegram.org/js/telegram-widget.js?7"
             data-telegram-login="mohdadilvp_bot"
